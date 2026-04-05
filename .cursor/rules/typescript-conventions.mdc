@@ -1,6 +1,8 @@
 ---
 description: TypeScript style — types, imports, and strictness
-globs: "**/*.{ts,tsx}"
+globs:
+  - "packages/**/*.{ts,tsx}"
+  - "excalidraw-app/**/*.{ts,tsx}"
 alwaysApply: false
 ---
 

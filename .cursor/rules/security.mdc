@@ -13,5 +13,12 @@ alwaysApply: true
 ## How to verify
 
 - Run `git grep -iE 'apikey|secret|password|token' -- ':!yarn.lock' ':!*.snap'` and review hits; remove or redact accidental literals.
-- For UI changes that render external strings, confirm no `dangerouslySetInnerHTML` without sanitization unless matching an existing audited pattern.
+- **XSS and unsafe execution:** Search the diff (or `git grep`) for risky patterns. Reject new uses unless they match an **existing, audited** exception in-tree; otherwise require sanitization (e.g. `DOMPurify`) or a safe API (text nodes, `JSON.stringify` in `<pre>`, etc.).
+  - **React:** `dangerouslySetInnerHTML`
+  - **DOM HTML:** `.innerHTML`, `outerHTML`, `insertAdjacentHTML`
+  - **Dynamic code:** `eval(`, `new Function(`, `Function(`
+  - **Scripts:** `document.createElement('script'`, `appendChild`/`insertBefore` of script nodes, dynamic `src` on scripts
+  - **Inline handlers:** `setAttribute('on` (e.g. `onclick`), or JSX/`setAttribute` wiring `on*` handlers from untrusted strings
+  - **SVG / mixed content:** `<foreignObject>`, injecting untrusted SVG/XML; only allow patterns already used safely elsewhere in the repo
+  - **Canvas / pixels:** `drawImage` / `toDataURL` / `getImageData` driven by unvalidated user input (cross-origin or poisoned bitmaps) — confirm threat model and existing mitigations
 - After adding dependencies, run `yarn audit --level high` and address or document accepted risk.

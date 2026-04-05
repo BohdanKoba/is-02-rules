@@ -6,10 +6,10 @@ alwaysApply: true
 # Monorepo core
 
 - **Package manager:** Yarn 1.x workspaces (`package.json` `workspaces`: `excalidraw-app`, `packages/*`, `examples/*`).
-- **Library code:** `packages/common`, `packages/element`, `packages/math`, `packages/excalidraw` (published `@excalidraw/*`).
+- **Library code:** `packages/common`, `packages/element`, `packages/math`, `packages/utils`, `packages/excalidraw` (published `@excalidraw/*`).
 - **Web app:** `excalidraw-app` (Vite app that consumes packages).
 - **Prefer** workspace scripts from repo root: `yarn test`, `yarn build`, `yarn test:typecheck`, `yarn test:code`.
-- **Imports:** use `@excalidraw/common`, `@excalidraw/element`, `@excalidraw/math`, `@excalidraw/excalidraw` as configured in `vitest.config.mts` and package `package.json` exports.
+- **Imports:** use workspace packages `@excalidraw/common`, `@excalidraw/element`, `@excalidraw/math`, `@excalidraw/utils`, and `@excalidraw/excalidraw` (plus subpaths like `@excalidraw/common/...` only where exports exist). Aliases for tests are defined in `vitest.config.mts` (`resolve.alias`); Vite / app bundling uses each package’s `package.json` `"exports"` — match those surfaces instead of inventing new alias paths.
 
 ## How to verify
 
