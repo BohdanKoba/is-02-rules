@@ -1,0 +1,19 @@
+---
+description: Vitest tests, colocation, and CI-aligned checks
+globs: "**/*.test.{ts,tsx}"
+alwaysApply: false
+---
+
+# Testing
+
+- **Runner:** Vitest (`yarn test` / `yarn test:app`). Config: `vitest.config.mts`, setup: `setupTests.ts`.
+- **Colocation:** Tests live next to code (e.g. `packages/excalidraw/tests/`, `*.test.tsx`) following existing patterns.
+- **UI / canvas:** Reuse helpers from `packages/excalidraw/tests/helpers/` and existing `GlobalTestState` patterns where applicable.
+- **Snapshots:** Update only when behavior change is intentional; use `yarn test:update` sparingly and review diffs.
+- **Before finishing:** run targeted tests for touched packages, then `yarn test:all` when changing shared code.
+
+## How to verify
+
+- Run `yarn test --run path/to/file.test.tsx` (or `vitest` with a file filter) and confirm the new or changed tests pass.
+- Run `yarn test:all` before opening a PR and ensure exit code 0 (typecheck, eslint, prettier, vitest).
+- If snapshots changed, run `yarn test:app --update --watch=false` once and inspect `git diff` on `.snap` files.

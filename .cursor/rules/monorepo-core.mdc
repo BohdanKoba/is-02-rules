@@ -1,0 +1,18 @@
+---
+description: Yarn workspaces layout, scripts, and where to change code
+alwaysApply: true
+---
+
+# Monorepo core
+
+- **Package manager:** Yarn 1.x workspaces (`package.json` `workspaces`: `excalidraw-app`, `packages/*`, `examples/*`).
+- **Library code:** `packages/common`, `packages/element`, `packages/math`, `packages/excalidraw` (published `@excalidraw/*`).
+- **Web app:** `excalidraw-app` (Vite app that consumes packages).
+- **Prefer** workspace scripts from repo root: `yarn test`, `yarn build`, `yarn test:typecheck`, `yarn test:code`.
+- **Imports:** use `@excalidraw/common`, `@excalidraw/element`, `@excalidraw/math`, `@excalidraw/excalidraw` as configured in `vitest.config.mts` and package `package.json` exports.
+
+## How to verify
+
+- From the repository root, run `yarn test:typecheck` and confirm TypeScript completes with no errors.
+- Open `package.json` and confirm `workspaces` lists `excalidraw-app`, `packages/*`, and `examples/*`.
+- Run `yarn test:code` and confirm ESLint runs across `.js`, `.ts`, `.tsx` without new violations.

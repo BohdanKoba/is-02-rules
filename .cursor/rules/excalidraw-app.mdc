@@ -1,0 +1,18 @@
+---
+description: Vite app layer — routing, env, and build entrypoints
+globs: excalidraw-app/**/*.{ts,tsx}
+alwaysApply: false
+---
+
+# excalidraw-app
+
+- **Dev / build:** Use `yarn start` and `yarn build` from root (they delegate to `excalidraw-app` via `package.json` scripts).
+- **Env:** Read configuration through existing Vite env patterns; do not hardcode environment-specific hosts in source.
+- **PWA / assets:** Respect `vite.config.ts`, `public/`, and service worker behavior when changing caching or shell.
+- **Depends on packages:** Import `@excalidraw/excalidraw` and siblings; avoid duplicating editor logic that belongs in `packages/excalidraw`.
+
+## How to verify
+
+- Run `yarn start` and confirm the dev server boots; smoke-test the changed screen or flow.
+- Run `yarn build` and confirm production build completes (required for PR checklist).
+- Run `yarn test:code` scoped mentally to `excalidraw-app/` paths you touched, or full `yarn test:code` before merge.

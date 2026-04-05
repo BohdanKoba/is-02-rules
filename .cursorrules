@@ -1,0 +1,7 @@
+# Legacy Cursor rules (see .cursor/rules/*.mdc for source of truth)
+
+- Monorepo: Yarn workspaces; use root scripts (`yarn test:all`, `yarn build`).
+- Editor code: `packages/excalidraw`; app shell: `excalidraw-app`.
+- TypeScript strict; use `@excalidraw/*` imports; avoid `any` for new code.
+- Tests: Vitest; colocate with existing `*.test.tsx` / `tests/` patterns.
+- Security: no secrets in repo; no unsafe HTML from user/scene JSON; prefer escaped text nodes over `dangerouslySetInnerHTML` for debug UIs.

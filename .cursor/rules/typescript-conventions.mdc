@@ -1,0 +1,19 @@
+---
+description: TypeScript style — types, imports, and strictness
+globs: "**/*.{ts,tsx}"
+alwaysApply: false
+---
+
+# TypeScript conventions
+
+- **Strictness:** Honor `tsconfig.json` / package tsconfigs; do not loosen compiler options in feature PRs.
+- **Types:** Prefer explicit public APIs and narrow unions over `any`. Use `unknown` plus narrowing when handling external data.
+- **Imports:** Use path aliases (`@excalidraw/*`) per existing config; avoid deep relative imports that skip package boundaries.
+- **React:** Type props explicitly; use `React.*` types consistent with React 19 typings in the repo.
+- **Exports:** Re-export from package `index` files when adding public surface area for consumers.
+
+## How to verify
+
+- Run `yarn test:typecheck` from the repository root with zero errors.
+- Run `yarn test:code` and fix any new `@typescript-eslint` or import-order violations.
+- For a changed package, run `yarn build:common` (and dependent builds) if types feed downstream packages.

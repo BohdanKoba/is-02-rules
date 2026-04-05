@@ -1,0 +1,19 @@
+---
+description: Editor package — App, canvas, scene, and test conventions
+globs: packages/excalidraw/**/*.{ts,tsx}
+alwaysApply: false
+---
+
+# packages/excalidraw
+
+- **Entry:** `packages/excalidraw/index.tsx` and internal `components/App.tsx` coordinate most editor behavior.
+- **Scene / elements:** Prefer `@excalidraw/element` types and helpers for element mutations; keep scene updates consistent with history/reconciliation patterns already in the package.
+- **State:** Follow existing `AppState`, action handlers, and immutability patterns; avoid ad-hoc global singletons for feature state.
+- **Canvas:** Respect `interactiveCanvas` / static canvas split and cursor handling (`cursor.ts` and related).
+- **Tests:** Use `packages/excalidraw/tests/` structure; mirror feature area (`data/`, `scene/`, etc.).
+
+## How to verify
+
+- Run `yarn test --run packages/excalidraw` and confirm all package tests pass.
+- Run `yarn build:excalidraw` and confirm the package build completes without errors.
+- Manually smoke-test in `yarn start` if the change affects interaction, rendering, or export.

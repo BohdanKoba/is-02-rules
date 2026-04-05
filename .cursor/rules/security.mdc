@@ -1,0 +1,17 @@
+---
+description: Secrets, unsafe patterns, and dependency hygiene
+alwaysApply: true
+---
+
+# Security
+
+- **Secrets:** Never commit API keys, tokens, or production URLs with credentials. Use env vars and document required vars in README or app config without sample secrets.
+- **User content:** Treat imported `.excalidraw` JSON, SVG, and URLs as untrusted. Validate and sanitize before `innerHTML`, `eval`, or dynamic script loading.
+- **Collaboration / network:** When touching sync or share features, prefer existing crypto and transport patterns; do not weaken encryption or skip server-side checks where the app already enforces them.
+- **Dependencies:** Prefer pinned or range-locked versions consistent with the repo; run `yarn audit` for critical issues when adding packages.
+
+## How to verify
+
+- Run `git grep -iE 'apikey|secret|password|token' -- ':!yarn.lock' ':!*.snap'` and review hits; remove or redact accidental literals.
+- For UI changes that render external strings, confirm no `dangerouslySetInnerHTML` without sanitization unless matching an existing audited pattern.
+- After adding dependencies, run `yarn audit --level high` and address or document accepted risk.
