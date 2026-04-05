@@ -54,7 +54,7 @@ Node **≥ 18** is required (`package.json` `engines`).
 ## Conventions
 
 - **Imports:** Use workspace aliases `@excalidraw/common`, `@excalidraw/element`, `@excalidraw/math`, `@excalidraw/utils`, `@excalidraw/excalidraw` as in `vitest.config.mts` and each package’s `package.json` `"exports"`.
-- **Tests:** Vitest (`vitest.config.mts`, `setupTests.ts`). Tests are colocated under `packages/*/tests/` or as `*.test.tsx` files.
+- **Tests:** Vitest (`vitest.config.mts`, `setupTests.ts`). Tests are co-located under `packages/*/tests/` or as `*.test.tsx` files.
 - **Lint / format:** ESLint with `@excalidraw/eslint-config`; Prettier with `@excalidraw/prettier-config`.
 - **Security:** Do not commit secrets; treat imported documents and URLs as untrusted when rendering or executing logic.
 

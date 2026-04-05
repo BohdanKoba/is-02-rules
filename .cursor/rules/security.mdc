@@ -10,6 +10,18 @@ alwaysApply: true
 - **Collaboration / network:** When touching sync or share features, prefer existing crypto and transport patterns; do not weaken encryption or skip server-side checks where the app already enforces them.
 - **Dependencies:** Prefer pinned or range-locked versions consistent with the repo; run `yarn audit` for critical issues when adding packages.
 
+## Content Security Policy
+
+- When introducing or tightening **CSP**, define at least: **`default-src`** (baseline), **`script-src`** (and `'strict-dynamic'` only with a clear nonce/hash strategy), **`style-src`** (allow inline only via hash/nonce if needed), **`img-src`**, **`frame-src`** / **`frame-ancestors`**, **`connect-src`** (APIs, WebSocket, Firebase/Google endpoints as required), and violation reporting via **`report-uri`** / **`report-to`** (prefer `report-to` where browsers support it).
+- Prefer **nonces** or **hashes** for any necessary inline script/style instead of `'unsafe-inline'`; avoid broad `*` in `script-src` unless no alternative and threat model accepts it.
+- **Deploy config in this repo:** hosting headers today live mainly in **`vercel.json`** and **`public/_headers`** — there is **no** `Content-Security-Policy` entry there yet; new CSP should be added explicitly to the right layer (CDN, `vercel.json`, or meta where appropriate) and reviewed for Vite/React/Firebase needs.
+
+## Firebase security rules
+
+- The app uses the Firebase client in **`excalidraw-app/data/firebase.ts`** (Firestore, Storage). **Server-side rules** are versioned under **`firebase-project/`**: **`firebase-project/firestore.rules`**, **`firebase-project/storage.rules`**, wired by **`firebase-project/firebase.json`**.
+- Any change to data access must keep **least privilege**: authenticated reads/writes where rooms or user data are involved, validated paths (e.g. storage prefixes used in code), and no widening `allow` without review.
+- **Validate locally:** use the **Firebase emulator** with `firebase.json` / rules from `firebase-project/`, and add or run **rules unit tests** (e.g. `@firebase/rules-unit-testing`) when touching rules; aim to **gate CI** on those tests once present.
+
 ## How to verify
 
 - Run `git grep -iE 'apikey|secret|password|token' -- ':!yarn.lock' ':!*.snap'` and review hits; remove or redact accidental literals.
@@ -22,3 +34,5 @@ alwaysApply: true
   - **SVG / mixed content:** `<foreignObject>`, injecting untrusted SVG/XML; only allow patterns already used safely elsewhere in the repo
   - **Canvas / pixels:** `drawImage` / `toDataURL` / `getImageData` driven by unvalidated user input (cross-origin or poisoned bitmaps) — confirm threat model and existing mitigations
 - After adding dependencies, run `yarn audit --level high` and address or document accepted risk.
+- **CSP:** Run `git grep -n 'Content-Security-Policy' -- '*.json' '*.html' '*.ts' '*.tsx' 'public/*' 'vercel.json' || true` and inspect hosting config; load a built or deployed page and confirm **response headers** (or `<meta http-equiv="Content-Security-Policy">` if used) in DevTools **Network** → document; ensure enforcement mode (`Content-Security-Policy` vs `Content-Security-Policy-Report-Only`) matches rollout.
+- **Firebase rules:** Run `git grep -nE 'firebase|firestore\\.rules|storage\\.rules' -- ':!yarn.lock' ':!*.snap'`; open **`firebase-project/firestore.rules`** and **`firebase-project/storage.rules`** for the change; run **emulator + rules tests** when available and ensure CI runs them if the pipeline defines them.
